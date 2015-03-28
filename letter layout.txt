@@ -1,0 +1,51 @@
+IT IS
+
+times intervals:
+- five
+- ten
+- quarter
+- twenty (five)
+- half
+
+PAST TO
+
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+eleven 
+twelve
+
+o clock
+
+
+blank:
+I T _ I S _ T W E N T Y _ 
+F I V E _ T E N _ H A L F 
+_ Q U A R T E R _ _ T O _ 
+P A S T _ _ O N E _ S I X 
+_ E I G H T _ F O U R _ _ 
+F I V E _ T W O _ N I N E 
+_ _ _ T E N _ T H R E E _ 
+T W E L V E _ S E V E N _ 
+_ _ _ E L E V E N _ _ _ _ 
+_ _ _ _ _ _ _ O C L O C K 
+
+
+randomized
+I T G I S B T W E N T Y U
+F I V E D T E N X H A L F
+B Q U A R T E R Y J T O Q
+P A S T J R O N E M S I X 
+M E I G H T U F O U R F O
+F I V E R T W O N N I N E
+G Z Y T E N P T H R E E Q
+T W E L V E F S E V E N K
+I A Q E L E V E N P X L T
+O G W H A X N O C L O C K

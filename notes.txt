@@ -1,0 +1,27 @@
+total: 
+21 'phrases'
+91 letters
+5 minute intervals (5/10/15/20/25/30) [+1 for none, +1 for 20+5]
+12 hour intervals
+
+longest sentence:
+it is twenty five past eleven o clock
+30 LED's simulataneously
+
+max power budgeting:
+LED: 30 x 0.03 A = 0.9
+uC: 100mA~
+
+
+bought:
+RTC [BQ32002]
+32.168kHz crystal
+3.3v regulator 
+shift registers 
+FETs
+usb connector
+
+need2buy:
+resistors
+headers 
+
