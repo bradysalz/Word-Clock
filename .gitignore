@@ -51,3 +51,5 @@ WordClock_GE423/word_clock.s#4
 *.job
 WordClock_GE423/word_clock.s#9
 *.s#8
+*.pro
+hardware/eagle.epf
