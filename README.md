@@ -23,13 +23,13 @@ We also have a button available on the MSP430 that will open and close shades on
 As well as the hours One through Twelve. 
 
 ### To Do
-[x] Outline letters
-[x] Design Schematic
-[x] Design PCB
-[ ] Code MSP430 RTC reads
-[ ] Code MSP430 shift register writes
-[x] Code MSP430 servo drivers
-[ ] Design physical enclosure
-[ ] Build physical enclosure
-[ ] Wire LEDs/resistors
-[ ] Add curtains
+- [x] Outline letters
+- [x] Design Schematic
+- [x] Design PCB
+- [ ] Code MSP430 RTC reads
+- [ ] Code MSP430 shift register writes
+- [x] Code MSP430 servo drivers
+- [x] Design physical enclosure
+- [ ] Build physical enclosure
+- [ ] Wire LEDs/resistors
+- [ ] Add curtains
