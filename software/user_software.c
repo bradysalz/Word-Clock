@@ -114,29 +114,6 @@ __interrupt void USCI0RX_ISR(void) {
 
 	if(IFG2&UCA0RXIFG) {  // USCI_A0 requested RX interrupt (UCA0RXBUF is full)
 
-//    Uncomment this block of code if you would like to use this COM protocol that uses 253 as STARTCHAR and 255 as STOPCHAR
-/*		if(!started) {	// Haven't started a message yet
-			if(UCA0RXBUF == 253) {
-				started = 1;
-				newmsg = 0;
-			}
-		}
-		else {	// In process of receiving a message		
-			if((UCA0RXBUF != 255) && (msgindex < (MAX_NUM_FLOATS*5))) {
-				rxbuff[msgindex] = UCA0RXBUF;
-
-				msgindex++;
-			} else {	// Stop char received or too much data received
-				if(UCA0RXBUF == 255) {	// Message completed
-					newmsg = 1;
-					rxbuff[msgindex] = 255;	// "Null"-terminate the array
-				}
-				started = 0;
-				msgindex = 0;
-			}
-		}
-*/
-
 		IFG2 &= ~UCA0RXIFG;
 	}
 
@@ -166,5 +143,21 @@ void config(void)
 	TACCTL0 = CCIE;       		// Enable Periodic interrupt
 	TACCR0 = 16000;                // period = 1ms   
 	TACTL = TASSEL_2 + MC_1; // source SMCLK, up mode
+
+	// I2C Config
+	P1SEL |= BIT6 + BIT7;   // Assign I2C pins to USCI_B0
+  	P1SEL2|= BIT6 + BIT7;   // Assign I2C pins to USCI_B0
+  	
+  	UCB0CTL1 |= UCSWRST;                      // Enable SW reset
+	UCB0CTL0 = UCMST + UCMODE_3 + UCSYNC;     // I2C Master, synchronous mode
+	CB0CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK, keep SW reset
+	CB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
+	UCB0BR1 = 0;
+
+	// GPIO Config
+	P1DIR |= BIT1 + BIT0;    // shift register pins (1.1, 1.2) are outputs
+	P1OUT = 0; 				
+	P1OUT |= BIT2;   // enable pullup for input
+	P1REN |= BIT2;   // 1.3 is button input
 
 }
