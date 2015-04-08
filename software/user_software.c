@@ -16,6 +16,7 @@ char newprint = 0;
 unsigned long timecnt = 0;  
 
 void config(void);
+void pulseClk(void);
 
 void main(void) {
 
@@ -152,4 +153,14 @@ void config(void)
 	P1OUT |= BIT2;   // enable pullup for input
 	P1REN |= BIT2;   // 1.3 is button input
 
+}
+
+
+// create a rising edge pulse for the shift register
+// shouldn't need any delay in this
+void pulseClk(void)
+{
+	P1OUT &= ~BIT0;
+	P1OUT |= BIT1;
+	P1OUT &= ~BIT0;
 }
