@@ -131,14 +131,6 @@ void config(void)
 	DCOCTL = CALDCO_16MHZ;    // Set uC to run at approximately 16 Mhz
 	BCSCTL1 = CALBC1_16MHZ; 
 
-	// Initialize Port 1
-	P1SEL &= ~0x01;  // See page 42 and 43 of the G2553's datasheet, It shows that when both P1SEL and P1SEL2 bits are zero   
-	P1SEL2 &= ~0x01; // the corresponding pin is set as a I/O pin.  Datasheet: http://coecsl.ece.illinois.edu/ge423/datasheets/MSP430Ref_Guides/msp430g2553datasheet.pdf  
-	P1REN = 0x0;  // No resistors enabled for Port 1
-	P1DIR |= 0x1; // Set P1.0 to output to drive LED on LaunchPad board.  Make sure shunt jumper is in place at LaunchPad's Red LED
-	P1OUT &= ~0x01;  // Initially set P1.0 to 0
-
-
 	// Timer A Config
 	TACCTL0 = CCIE;       		// Enable Periodic interrupt
 	TACCR0 = 16000;                // period = 1ms   
