@@ -39,13 +39,18 @@ University of Illinois at Urbana-Champaign
 #define REG_MINUTES 0x01
 #define REG_HOURS   0x02
 
+// globals
 char newprint = 0;           // UART print flag
 unsigned long timecnt = 0;  
 unsigned char RxData = 0; 
 
+// function definitions
 void config(void);
 void pulseClk(void);
 void shiftData(float wordArray);
+void idle(int us);
+void setRegister(unsigned char address, unsigned char value);
+unsigned char getRegister(unsigned char address);
 
 void main(void) {
 
@@ -53,14 +58,13 @@ void main(void) {
 
 	_BIS_SR(GIE); 		// Enable global interrupt
 
-
 	while(1) {
 
-		if(newmsg) {
+		if(newmsg) {	
 			newmsg = 0;
 		}
 
-		if (newprint)  {
+		if (newprint)  {	
 
 			P1OUT ^= 0x1;		// Blink LED
 
@@ -80,7 +84,8 @@ __interrupt void Timer_A (void)
 	timecnt++; // Keep track of time for main while loop. 
 
 	if ((timecnt%500) == 0) {
-	newprint = 1;  // flag main while loop that .5 seconds have gone by.  
+		newprint = 1;  // flag main while loop that .5 seconds have gone by.  
+		timecnt = 0;
 	}
 
 }
