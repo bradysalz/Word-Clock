@@ -207,3 +207,22 @@ void idle(int us)
 	int delay;
 	for(delay = 0; delay < us; delay++);
 }
+
+// set a register on the chip using I2C
+void setRegister(unsigned char address, unsigned char value)
+{
+	UCB0CTL1 |= UCTXSTT + UCTR;   	  // generate start condition in transmit mode
+	
+	UCB0TXBUF = address & 0xFF;  	  // send address
+	while(UCB0CTL1 & UCTXSTT);		  // wait until start condition is sent
+	while((!UCB0STAT & UCNACKIFG) && (!IFG2 & UCB0TXIFG)); // wait for ACK
+	idle(15); // idle to wait for transfer to finish
+
+
+	UCB0TXBUF = value & 0xFF;
+	while((!UCB0STAT & UCNACKIFG) && (!IFG2 & UCB0TXIFG)); // wait for ACK
+	idle(15); // idle to wait for transfer to finish
+
+	UCB0CTL1 |= UCTXSTP;        //send stop condition after 2 byte of data
+	while(UCB0CTL1 & UCTXSTP); //wait for stop condition to sent before moving on
+}
