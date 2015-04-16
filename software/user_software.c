@@ -272,18 +272,17 @@ __interrupt void USCI0TX_ISR(void) {
 // USCI Receive ISR - Called when shift register has been transferred to RXBUF
 // Indicates completion of TX/RX operation
 #pragma vector=USCIAB0RX_VECTOR
-__interrupt void USCI0RX_ISR(void) {
-
-    if(IFG2&UCB0RXIFG) {  // USCI_B0 requested RX interrupt (UCB0RXBUF is full)
-
+__interrupt void USCI0RX_ISR(void) 
+{
+    if(IFG2&UCB0RXIFG)  // USCI_B0 requested RX interrupt (UCB0RXBUF is full)
+    {
         IFG2 &= ~UCB0RXIFG;   // clear IFG
     }
 
-    if(IFG2&UCA0RXIFG) {  // USCI_A0 requested RX interrupt (UCA0RXBUF is full)
-
+    if(IFG2&UCA0RXIFG)  // USCI_A0 requested RX interrupt (UCA0RXBUF is full)
+    {
         IFG2 &= ~UCA0RXIFG;
     }
-
 }
 
 
