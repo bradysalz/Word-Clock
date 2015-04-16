@@ -12,11 +12,40 @@ University of Illinois at Urbana-Champaign
 #include "msp430g2553.h"
 #include "UART.h"
 
-char newprint = 0;
+// my local defns for calculating LED output
+#define IT_IS 	 1<<0
+#define FIVE_MIN 1<<1
+#define TEN_MIN  1<<2
+#define QUARTER  1<<3
+#define TWENTY   1<<4
+#define HALF 	 1<<5
+#define PAST 	 1<<6
+#define TO 		 1<<7
+#define ONE 	 1<<8
+#define TWO 	 1<<9
+#define THREE 	 1<<10
+#define FOUR 	 1<<11
+#define FIVE_HR  1<<12
+#define SIX 	 1<<13
+#define SEVEN 	 1<<14
+#define EIGHT 	 1<<15
+#define NINE 	 1<<16
+#define TEN_HR 	 1<<17
+#define ELEVEN   1<<18
+#define TWELVE   1<<19
+#define OCLK     1<<20
+
+// register maps
+#define REG_MINUTES 0x01
+#define REG_HOURS   0x02
+
+char newprint = 0;           // UART print flag
 unsigned long timecnt = 0;  
+unsigned char RxData = 0; 
 
 void config(void);
 void pulseClk(void);
+void shiftData(float wordArray);
 
 void main(void) {
 
