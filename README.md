@@ -26,8 +26,8 @@ As well as the hours One through Twelve.
 - [x] Outline letters
 - [x] Design Schematic
 - [x] Design PCB
-- [ ] Code MSP430 RTC reads
-- [ ] Code MSP430 shift register writes
+- [x] Code MSP430 RTC reads
+- [x] Code MSP430 shift register writes
 - [x] Code MSP430 servo drivers
 - [x] Design physical enclosure
 - [ ] Build physical enclosure
