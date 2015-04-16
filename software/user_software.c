@@ -58,21 +58,32 @@ void main(void) {
 
 	_BIS_SR(GIE); 		// Enable global interrupt
 
-	while(1) {
+	RxData = getRegister(REG_MINUTES);
+	if (RxData & 0x80) // check to see if inital cal needs to be performed
+	{
+		// NEEDS TO BE CUSTOMIZED EACH TIME
+		// 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
+		// 0 - 0 - [2 bit BCD Ten's Hour] - [4 bit BCD One's Hour]
+		// use 24 hour format
+		unsigned char min = ;
+		unsigned char hour = 
+		setRegister(REG_MINUTES, );
+		setRegister(REG_HOURS, ) 
+	}
 
-		if(newmsg) {	
+	while(1) 
+	{
+		if(newmsg) 
+		{	
 			newmsg = 0;
 		}
 
-		if (newprint)  {	
-
+		if (newprint)  
+		{	
 			P1OUT ^= 0x1;		// Blink LED
-
 			UART_printf("Hello %d\n\r",(int)(timecnt/500));
-
 			newprint = 0;
 		}
-
 	}
 }
 
@@ -89,16 +100,6 @@ __interrupt void Timer_A (void)
 	}
 
 }
-
-
-/*
-// ADC 10 ISR - Called when a sequence of conversions (A7-A0) have completed
-#pragma vector=ADC10_VECTOR
-__interrupt void ADC10_ISR(void) {
-
-}
-*/
-
 
 // USCI Transmit ISR - Called when TXBUF is empty (ready to accept another character)
 #pragma vector=USCIAB0TX_VECTOR
@@ -253,7 +254,7 @@ unsigned char getRegister(unsigned char address)
 	UCB0CTL1 |= UCTXSTP;        //send stop condition after 1 byte of data
 	while(!IFG2  & UCB0RXIFG);  //wait for master to finish receiving
 	idle(15);
-	
+
 	unsigned char value = UCB0RXBUF;
 	while(UCB0CTL1 & UCTXSTP); //wait for stop condition to sent before moving on
 	return value;
