@@ -196,3 +196,14 @@ void pulseClk(void)
 	P1OUT |= BIT1;
 	P1OUT &= ~BIT0;
 }
+
+
+// add a small delay
+// used to delay while the chip processes the I2C data
+// before TX/RX any more data
+void idle(int us)
+{
+	us *= 16; // 16MHz clock
+	int delay;
+	for(delay = 0; delay < us; delay++);
+}
