@@ -213,6 +213,7 @@ void idle(int us)
 	for(delay = 0; delay < us; delay++);
 }
 
+// I2C Write
 // set a register on the chip using I2C
 void setRegister(unsigned char address, unsigned char value)
 {
@@ -230,4 +231,30 @@ void setRegister(unsigned char address, unsigned char value)
 
 	UCB0CTL1 |= UCTXSTP;        //send stop condition after 2 byte of data
 	while(UCB0CTL1 & UCTXSTP); //wait for stop condition to sent before moving on
+}
+
+// I2C Read
+// get a register on the chip using I2C
+unsigned char getRegister(unsigned char address)
+{
+	UCB0CTL1 |= UCTXSTT + UCTR;   	  // generate start condition in transmit mode
+	
+	UCB0TXBUF = (address) & 0xFF;   // send addresss
+	while(UCB0CTL1 & UCTXSTT);		// wait until start condition is sent
+	while((!UCB0STAT & UCNACKIFG) && (!IFG2 & UCB0TXIFG)); // wait for ACK
+	idle(15);//idle to wait for transfer to finish
+
+	//Recieve
+	UCB0CTL1 &= ~UCTR;			//receive
+	UCB0CTL1 |= UCTXSTT;		//send another start condition in receive mode
+	idle(15);
+	while(UCB0CTL1 & UCTXSTT);	//wait until start condition is sent
+
+	UCB0CTL1 |= UCTXSTP;        //send stop condition after 1 byte of data
+	while(!IFG2  & UCB0RXIFG);  //wait for master to finish receiving
+	idle(15);
+	
+	unsigned char value = UCB0RXBUF;
+	while(UCB0CTL1 & UCTXSTP); //wait for stop condition to sent before moving on
+	return value;
 }
