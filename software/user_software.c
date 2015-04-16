@@ -61,6 +61,7 @@ void shiftData(double wordArray);
 void idle(int us);
 void setRegister(unsigned char address, unsigned char value);
 unsigned char getRegister(unsigned char address);
+void calibrate(void);
 
 void main(void) {
 
@@ -71,14 +72,7 @@ void main(void) {
 	// check to see if inital cal needs to be performed
 	if (getRegister(REG_MINUTES) & 0x80) 
 	{
-		// NEEDS TO BE CUSTOMIZED EACH TIME
-		// 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
-		// 0 - 0 - [2 bit BCD Ten's Hour] - [4 bit BCD One's Hour]
-		// use 24 hour format
-		unsigned char min = ;
-		unsigned char hour = 
-		setRegister(REG_MINUTES, );
-		setRegister(REG_HOURS, ) 
+		calibrate();
 	}
 
 	while(1) 
@@ -117,8 +111,8 @@ __interrupt void Timer_A (void)
 {
 	timecnt++; // Keep track of time for main while loop. 
 
-	if ((timecnt%500) == 0) {
-		newprint = 1;  // flag main while loop that .5 seconds have gone by.  
+	if ((timecnt%15000) == 0) {
+		newprint = 1;  // flag main while loop that 15 seconds have gone by.  
 		timecnt = 0;
 	}
 
@@ -281,4 +275,19 @@ unsigned char getRegister(unsigned char address)
 	unsigned char value = UCB0RXBUF;
 	while(UCB0CTL1 & UCTXSTP); //wait for stop condition to sent before moving on
 	return value;
+}
+
+void calibrate(void)
+{
+	// NEEDS TO BE CUSTOMIZED EACH TIME
+	// 0 - [3 bit BCD Ten's Second] - [4 bit BCD One's Second]
+	// 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
+	// 0 - 0 - [2 bit BCD Ten's Hour] - [4 bit BCD One's Hour]
+	// use 24 hour format
+	unsigned char sec = ;
+	unsigned char min = ;
+	unsigned char hour = ;
+	setRegister(REG_SECONDS, CURR_SEC);
+	setRegister(REG_MINUTES, CURR_MIN);
+	setRegister(REG_HOURS, CURR_HRS);
 }
