@@ -41,7 +41,11 @@ University of Illinois at Urbana-Champaign
 #define REG_HOURS   0x02
 
 // current time
-// see how to format in calibrate() function
+// NEEDS TO BE CUSTOMIZED EACH TIME
+// 0 - [3 bit BCD Ten's Second] - [4 bit BCD One's Second]
+// 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
+// 0 - 0 - [2 bit BCD Ten's Hour] - [4 bit BCD One's Hour]
+// use 24 hour format
 #define CURR_SEC 
 #define CURR_MIN
 #define CURR_HRS
@@ -388,14 +392,6 @@ unsigned char getRegister(unsigned char address)
 
 void calibrate(void)
 {
-	// NEEDS TO BE CUSTOMIZED EACH TIME
-	// 0 - [3 bit BCD Ten's Second] - [4 bit BCD One's Second]
-	// 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
-	// 0 - 0 - [2 bit BCD Ten's Hour] - [4 bit BCD One's Hour]
-	// use 24 hour format
-	unsigned char sec = ;
-	unsigned char min = ;
-	unsigned char hour = ;
 	setRegister(REG_SECONDS, CURR_SEC);
 	setRegister(REG_MINUTES, CURR_MIN);
 	setRegister(REG_HOURS, CURR_HRS);
