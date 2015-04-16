@@ -52,7 +52,6 @@ unsigned long timecnt = 0;
 unsigned char seconds = 0; 
 unsigned char minutes = 0;
 unsigned char hours = 0;
-double wordArray = 0;
 
 // function definitions
 void config(void);
@@ -88,18 +87,74 @@ void main(void) {
 			minutes = getRegister(REG_MINUTES);
 			hours   = getRegister(REG_HOURS);
 
-			wordArray = IT_IS + OCLK;  //  intialize array 
+			double wordArray = IT_IS + OCLK;  //  intialize array 
 
 			// convert from register to decimal
 			minutes = (minutes & 0x0F) + 10 * (minutes>>4); 
 			hours = (hours & 0x0F) + 10 * (hours>>4);      
 			
-			if(hours > 12) 
+			if (hours > 12) 
 			{
 				hours -= 12; // convert from 24hr to 12hr
 			}
 
-			
+			if ((3 <= minutes) && (minutes <= 7))
+			{
+				wordArray += FIVE_MIN;
+				wordArray += PAST;
+			}
+			else if ((8 <= minutes) && (minutes <= 12))
+			{
+				wordArray += TEN_MIN;
+				wordArray += PAST;
+			}
+			else if ((13 <= minutes) && (minutes <= 17))
+			{
+				wordArray += QUARTER;
+				wordArray += PAST;
+			}
+			else if ((18 <= minutes) && (minutes <= 22))
+			{
+				wordArray += TWENTY;
+				wordArray += PAST;
+			}
+			else if ((23 <= minutes) && (minutes <= 27))
+			{
+				wordArray += (TWENTY + FIVE_MIN);
+				wordArray += PAST;
+			}
+			else if ((27 <= minutes) && (minutes <= 32))
+			{
+				wordArray += HALF;
+				wordArray += PAST;
+			}
+			else if ((33 <= minutes) && (minutes <= 37))
+			{
+				wordArray += (TWENTY + FIVE_MIN);
+				wordArray += TO;
+			}
+			else if ((38 <= minutes) && (minutes <= 42))
+			{
+				wordArray += TWENTY;
+				wordArray += TO;
+			}
+			else if ((43 <= minutes) && (minutes <= 47))
+			{
+				wordArray += QUARTER;
+				wordArray += TO;
+			}
+			else if ((48 <= minutes) && (minutes <= 52))
+			{
+				wordArray += TEN_MIN;
+				wordArray += TO;
+			}
+			else if ((53 <= minutes) && (minutes <= 57))
+			{
+				wordArray += FIVE_MIN;
+				wordArray += TO;
+			}
+
+
 		}
 	}
 }
