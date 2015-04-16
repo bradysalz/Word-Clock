@@ -83,16 +83,29 @@ void main(void) {
 
 	while(1) 
 	{
-		if(newmsg) 
-		{	
-			newmsg = 0;
-		}
-
 		if (newprint)  
 		{	
-			P1OUT ^= 0x1;		// Blink LED
-			UART_printf("Hello %d\n\r",(int)(timecnt/500));
-			newprint = 0;
+			seconds = getRegister(REG_SECONDS);
+			if(seconds & 0x80)
+			{
+				calibrate();
+			}
+
+			minutes = getRegister(REG_MINUTES);
+			hours   = getRegister(REG_HOURS);
+
+			wordArray = IT_IS + OCLK;  //  intialize array 
+
+			// convert from register to decimal
+			minutes = (minutes & 0x0F) + 10 * (minutes>>4); 
+			hours = (hours & 0x0F) + 10 * (hours>>4);      
+			
+			if(hours > 12) 
+			{
+				hours -= 12; // convert from 24hr to 12hr
+			}
+
+			
 		}
 	}
 }
