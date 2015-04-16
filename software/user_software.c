@@ -1,6 +1,10 @@
 /******************************************************************************
-MSP430G2553 Project Creator
+WORD CLOCK Controller
+Brady Salz
+GE423 HW Project
+4/16/15
 
+Template Code made by:
 GE 423  - Dan Block
         Spring(2012)
 
@@ -13,27 +17,27 @@ University of Illinois at Urbana-Champaign
 #include "UART.h"
 
 // my local defns for calculating LED output
-#define IT_IS    1<<0
-#define FIVE_MIN 1<<1
-#define TEN_MIN  1<<2
-#define QUARTER  1<<3
-#define TWENTY   1<<4
-#define HALF     1<<5
-#define PAST     1<<6
-#define TO       1<<7
-#define ONE      1<<8
-#define TWO      1<<9
-#define THREE    1<<10
-#define FOUR     1<<11
-#define FIVE_HR  1<<12
-#define SIX      1<<13
-#define SEVEN    1<<14
-#define EIGHT    1<<15
-#define NINE     1<<16
-#define TEN_HR   1<<17
-#define ELEVEN   1<<18
-#define TWELVE   1<<19
-#define OCLK     1<<20
+#define IT_IS    0x0000001
+#define FIVE_MIN 0x0000002
+#define TEN_MIN  0x0000004
+#define QUARTER  0x0000008
+#define TWENTY   0x0000010
+#define HALF     0x0000020
+#define PAST     0x0000040
+#define TO       0x0000080
+#define ONE      0x0000100
+#define TWO      0x0000200
+#define THREE    0x0000400
+#define FOUR     0x0000800
+#define FIVE_HR  0x0001000
+#define SIX      0x0002000
+#define SEVEN    0x0004000
+#define EIGHT    0x0008000
+#define NINE     0x0100000
+#define TEN_HR   0x0200000
+#define ELEVEN   0x0400000
+#define TWELVE   0x0800000
+#define OCLK     0x1000000
 
 // register maps
 #define REG_SECONDS 0x00
@@ -46,9 +50,9 @@ University of Illinois at Urbana-Champaign
 // 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
 // 0 - 0 - [2 bit BCD Ten's Hour] - [4 bit BCD One's Hour]
 // use 24 hour format
-#define CURR_SEC 
-#define CURR_MIN
-#define CURR_HRS
+unsigned char CURR_SEC = 0;
+unsigned char CURR_MIN = 0;
+unsigned char CURR_HRS = 0;
 
 // globals
 char newprint = 0;           // UART print flag
@@ -181,10 +185,10 @@ void main(void) {
                     break;
 
                 case 5:
-                    wordArray += FIVE;
+                    wordArray += FIVE_HR;
                     break;
 
-                case 6;
+                case 6:
                     wordArray += SIX;
                     break;
 
@@ -309,8 +313,8 @@ void config(void)
     UCB0I2CSA = 0x68; // slave address (110 1000)
     UCB0CTL1 |= UCSWRST;                      // Enable SW reset
     UCB0CTL0 = UCMST + UCMODE_3 + UCSYNC;     // I2C Master, synchronous mode
-    CB0CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK, keep SW reset, 7 bit
-    CB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
+    UCB0CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK, keep SW reset, 7 bit
+    UCB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
     UCB0BR1 = 0;
     UCB0CTL1 &= ~UCSWRST; // start state machine
     IFG2 &= ~UCB0RXIE;    // clear interrupt flag, ready to Rx/Tx
@@ -403,9 +407,9 @@ void shiftData(double wordArray)
 {
     // shift out LSB first
     unsigned char i;
-    for(i = 21; i >= 0; i--)
+    for(i = 20; i >= 0; i--)
     {
-        if((wordArray>>i) & 0x1)
+        if( wordArray>>i & 0x01)
         {
             P1OUT |= BIT1;
         }       
