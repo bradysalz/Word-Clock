@@ -213,6 +213,7 @@ void main(void) {
 					break;
 			}
 
+			shiftData(wordArray);
 		}
 	}
 }
@@ -330,7 +331,9 @@ void pulseClk(void)
 {
 	P1OUT &= ~BIT0;
 	P1OUT |= BIT1;
+	idle(5);
 	P1OUT &= ~BIT0;
+	idle(5);
 }
 
 
@@ -395,4 +398,22 @@ void calibrate(void)
 	setRegister(REG_SECONDS, CURR_SEC);
 	setRegister(REG_MINUTES, CURR_MIN);
 	setRegister(REG_HOURS, CURR_HRS);
+}
+
+void shiftData(double wordArray)
+{
+	// shift out LSB first
+	unsigned char i;
+	for(i = 21; i >= 0; i--)
+	{
+		if((wordArray>>i) & 0x1)
+		{
+			P1OUT |= BIT1;
+		}		
+		else
+		{
+			P1OUT &= ~BIT1;
+		}
+		pulseClk();
+	}
 }
