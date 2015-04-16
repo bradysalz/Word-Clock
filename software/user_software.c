@@ -169,12 +169,15 @@ void config(void)
 	// I2C Config
 	P1SEL |= BIT6 + BIT7;   // Assign I2C pins to USCI_B0
   	P1SEL2|= BIT6 + BIT7;   // Assign I2C pins to USCI_B0
-  	
+
+	UCB0I2CSA = 0x68; // slave address (110 1000)
   	UCB0CTL1 |= UCSWRST;                      // Enable SW reset
 	UCB0CTL0 = UCMST + UCMODE_3 + UCSYNC;     // I2C Master, synchronous mode
-	CB0CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK, keep SW reset
+	CB0CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK, keep SW reset, 7 bit
 	CB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
 	UCB0BR1 = 0;
+	UCB0CTL1 &= ~UCSWRST; // start state machine
+	IFG2 &= ~UCB0RXIE;    // clear interrupt flag, ready to Rx/Tx
 
 	// GPIO Config
 	P1DIR |= BIT1 + BIT0;    // shift register pins (1.1, 1.2) are outputs
