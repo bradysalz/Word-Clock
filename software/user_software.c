@@ -36,18 +36,28 @@ University of Illinois at Urbana-Champaign
 #define OCLK     1<<20
 
 // register maps
+#define REG_SECONDS 0x00
 #define REG_MINUTES 0x01
 #define REG_HOURS   0x02
+
+// current time
+// see how to format in calibrate() function
+#define CURR_SEC 
+#define CURR_MIN
+#define CURR_HRS
 
 // globals
 char newprint = 0;           // UART print flag
 unsigned long timecnt = 0;  
-unsigned char RxData = 0; 
+unsigned char seconds = 0; 
+unsigned char minutes = 0;
+unsigned char hours = 0;
+double wordArray = 0;
 
 // function definitions
 void config(void);
 void pulseClk(void);
-void shiftData(float wordArray);
+void shiftData(double wordArray);
 void idle(int us);
 void setRegister(unsigned char address, unsigned char value);
 unsigned char getRegister(unsigned char address);
@@ -58,8 +68,8 @@ void main(void) {
 
 	_BIS_SR(GIE); 		// Enable global interrupt
 
-	RxData = getRegister(REG_MINUTES);
-	if (RxData & 0x80) // check to see if inital cal needs to be performed
+	// check to see if inital cal needs to be performed
+	if (getRegister(REG_MINUTES) & 0x80) 
 	{
 		// NEEDS TO BE CUSTOMIZED EACH TIME
 		// 0 - [3 bit BCD Ten's Minute] - [4 bit BCD One's Minute]
