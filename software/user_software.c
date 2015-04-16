@@ -154,6 +154,60 @@ void main(void) {
 				wordArray += TO;
 			}
 
+			switch (hours)
+			{
+				case 0:
+					wordArray += TWELVE;
+					break;
+
+				case 1:
+					wordArray += ONE;
+					break;
+
+				case 2:
+					wordArray += TWO;
+					break;
+
+				case 3:
+					wordArray += THREE;
+					break;
+
+				case 4:
+					wordArray += FOUR;
+					break;
+
+				case 5:
+					wordArray += FIVE;
+					break;
+
+				case 6;
+					wordArray += SIX;
+					break;
+
+				case 7:
+					wordArray += SEVEN;
+					break;
+
+				case 8:
+					wordArray += EIGHT;
+					break;
+
+				case 9:
+					wordArray += NINE;
+					break;
+
+				case 10:
+					wordArray += TEN_HR;
+					break;
+
+				case 11:
+					wordArray += ELEVEN;
+					break;
+
+				case 12:
+					wordArray += TWELVE;
+					break;
+			}
 
 		}
 	}
