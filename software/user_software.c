@@ -108,6 +108,8 @@ void main(void) {
                 hours -= 12; // convert from 24hr to 12hr
             }
 
+            UART_printf("Current time is %02d:%02d\r\n", hours, minutes);
+
             wordArray = setLEDBits();
 
             setServoPos();
