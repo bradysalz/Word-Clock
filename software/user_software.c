@@ -444,3 +444,21 @@ double setLEDBits(void)
 
     return wordArray;
 }
+
+void setServoPos()
+{
+    // minutes   = [0 ->60]
+    // servoTurn = [3 -> 14]
+    // tranform by:
+    // scale 0->1
+    // scale 0->11
+    // move 3->14
+    // turns 0 to 180(ish)
+    
+    // minutes ranges 
+    float servoTurn = minutes/60.0*11.0 + 3
+
+    TA1CCR1 = servoTurn*40000L/100;
+    TA1CCR2 = servoTurn*40000L/100;
+        
+}
