@@ -69,6 +69,8 @@ void idle(int us);
 void setRegister(unsigned char address, unsigned char value);
 unsigned char getRegister(unsigned char address);
 void calibrate(void);
+double setLEDBits(void);
+void setServoPos(void);
 
 void main(void) {
 
@@ -106,116 +108,9 @@ void main(void) {
                 hours -= 12; // convert from 24hr to 12hr
             }
 
-            if ((3 <= minutes) && (minutes <= 7))
-            {
-                wordArray += FIVE_MIN;
-                wordArray += PAST;
-            }
-            else if ((8 <= minutes) && (minutes <= 12))
-            {
-                wordArray += TEN_MIN;
-                wordArray += PAST;
-            }
-            else if ((13 <= minutes) && (minutes <= 17))
-            {
-                wordArray += QUARTER;
-                wordArray += PAST;
-            }
-            else if ((18 <= minutes) && (minutes <= 22))
-            {
-                wordArray += TWENTY;
-                wordArray += PAST;
-            }
-            else if ((23 <= minutes) && (minutes <= 27))
-            {
-                wordArray += (TWENTY + FIVE_MIN);
-                wordArray += PAST;
-            }
-            else if ((27 <= minutes) && (minutes <= 32))
-            {
-                wordArray += HALF;
-                wordArray += PAST;
-            }
-            else if ((33 <= minutes) && (minutes <= 37))
-            {
-                wordArray += (TWENTY + FIVE_MIN);
-                wordArray += TO;
-            }
-            else if ((38 <= minutes) && (minutes <= 42))
-            {
-                wordArray += TWENTY;
-                wordArray += TO;
-            }
-            else if ((43 <= minutes) && (minutes <= 47))
-            {
-                wordArray += QUARTER;
-                wordArray += TO;
-            }
-            else if ((48 <= minutes) && (minutes <= 52))
-            {
-                wordArray += TEN_MIN;
-                wordArray += TO;
-            }
-            else if ((53 <= minutes) && (minutes <= 57))
-            {
-                wordArray += FIVE_MIN;
-                wordArray += TO;
-            }
+            wordArray = setLEDBits();
 
-            switch (hours)
-            {
-                case 0:
-                    wordArray += TWELVE;
-                    break;
-
-                case 1:
-                    wordArray += ONE;
-                    break;
-
-                case 2:
-                    wordArray += TWO;
-                    break;
-
-                case 3:
-                    wordArray += THREE;
-                    break;
-
-                case 4:
-                    wordArray += FOUR;
-                    break;
-
-                case 5:
-                    wordArray += FIVE_HR;
-                    break;
-
-                case 6:
-                    wordArray += SIX;
-                    break;
-
-                case 7:
-                    wordArray += SEVEN;
-                    break;
-
-                case 8:
-                    wordArray += EIGHT;
-                    break;
-
-                case 9:
-                    wordArray += NINE;
-                    break;
-
-                case 10:
-                    wordArray += TEN_HR;
-                    break;
-
-                case 11:
-                    wordArray += ELEVEN;
-                    break;
-
-                case 12:
-                    wordArray += TWELVE;
-                    break;
-            }
+            setServoPos();
 
             shiftData(wordArray);
         }
@@ -229,7 +124,7 @@ __interrupt void Timer_A (void)
 {
     timecnt++; // Keep track of time for main while loop. 
 
-    if ((timecnt%15000) == 0) {
+    if ((timecnt%5000) == 0) {
         newprint = 1;  // flag main while loop that 15 seconds have gone by.  
         timecnt = 0;
     }
@@ -325,6 +220,17 @@ void config(void)
     P1OUT |= BIT2;   // enable pullup for input
     P1REN |= BIT2;   // 1.3 is button input
 
+    // Timer pin output setup
+    P2SEL = 0x14;
+    P2SEL2 = 0;
+    P2DIR = 0x14;
+
+    // PWM configuration
+    TA1CTL = ID_3 + MC_1 + TASSEL_2;
+    TA1CCR0 = 40000;
+    TA1CCTL1 = OUTMOD_7;
+    TA1CCTL2 = OUTMOD_7;
+
 }
 
 
@@ -406,10 +312,10 @@ void calibrate(void)
 void shiftData(double wordArray)
 {
     // shift out LSB first
-    unsigned char i;
+    int i;
     for(i = 20; i >= 0; i--)
     {
-        if( wordArray>>i & 0x01)
+        if( (int) wordArray>>i & 0x01) // need to cast for if statement
         {
             P1OUT |= BIT1;
         }       
@@ -419,4 +325,122 @@ void shiftData(double wordArray)
         }
         pulseClk();
     }
+}
+
+double setLEDBits(void)
+{
+    wordArray = 0;
+
+    if ((3 <= minutes) && (minutes <= 7))
+    {
+        wordArray += FIVE_MIN;
+        wordArray += PAST;
+    }
+    else if ((8 <= minutes) && (minutes <= 12))
+    {
+        wordArray += TEN_MIN;
+        wordArray += PAST;
+    }
+    else if ((13 <= minutes) && (minutes <= 17))
+    {
+        wordArray += QUARTER;
+        wordArray += PAST;
+    }
+    else if ((18 <= minutes) && (minutes <= 22))
+    {
+        wordArray += TWENTY;
+        wordArray += PAST;
+    }
+    else if ((23 <= minutes) && (minutes <= 27))
+    {
+        wordArray += (TWENTY + FIVE_MIN);
+        wordArray += PAST;
+    }
+    else if ((27 <= minutes) && (minutes <= 32))
+    {
+        wordArray += HALF;
+        wordArray += PAST;
+    }
+    else if ((33 <= minutes) && (minutes <= 37))
+    {
+        wordArray += (TWENTY + FIVE_MIN);
+        wordArray += TO;
+    }
+    else if ((38 <= minutes) && (minutes <= 42))
+    {
+        wordArray += TWENTY;
+        wordArray += TO;
+    }
+    else if ((43 <= minutes) && (minutes <= 47))
+    {
+        wordArray += QUARTER;
+        wordArray += TO;
+    }
+    else if ((48 <= minutes) && (minutes <= 52))
+    {
+        wordArray += TEN_MIN;
+        wordArray += TO;
+    }
+    else if ((53 <= minutes) && (minutes <= 57))
+    {
+        wordArray += FIVE_MIN;
+        wordArray += TO;
+    }
+
+    switch (hours)
+    {
+        case 0:
+            wordArray += TWELVE;
+            break;
+
+        case 1:
+            wordArray += ONE;
+            break;
+
+        case 2:
+            wordArray += TWO;
+            break;
+
+        case 3:
+            wordArray += THREE;
+            break;
+
+        case 4:
+            wordArray += FOUR;
+            break;
+
+        case 5:
+            wordArray += FIVE_HR;
+            break;
+
+        case 6:
+            wordArray += SIX;
+            break;
+
+        case 7:
+            wordArray += SEVEN;
+            break;
+
+        case 8:
+            wordArray += EIGHT;
+            break;
+
+        case 9:
+            wordArray += NINE;
+            break;
+
+        case 10:
+            wordArray += TEN_HR;
+            break;
+
+        case 11:
+            wordArray += ELEVEN;
+            break;
+
+        case 12:
+            wordArray += TWELVE;
+            break;
+    }
+
+    return wordArray;
 }
